@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/joeshaw/envdecode"
+  packages = ["."]
+  revision = "6326cbed175e32cd5183be1cc1027e0823c91edb"
+
+[[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -10,6 +16,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c39e9119cc91080f9178c39214d6ca06156205351dec2523319554ee3669537e"
+  inputs-digest = "90e7f7a6c275c012b7965a2fc243bb76312452d84ec38eaa400886ef6729c1fe"
   solver-name = "gps-cdcl"
   solver-version = 1
