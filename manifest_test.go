@@ -14,7 +14,7 @@ services:
             url: dashboard url
 `)
 
-func TestParseManifest(t *testing.T) {
+func TestParseTeam(t *testing.T) {
 	deploy := &Deploy{
 		Name:    "app name",
 		Runtime: "location",
@@ -24,10 +24,10 @@ func TestParseManifest(t *testing.T) {
 		Name:    "service name",
 		Deploys: []*Deploy{deploy},
 	}
-	want := &Manifest{
+	want := &Team{
 		Services: []*Service{service},
 	}
-	got, err := ParseManifest(data)
+	got, err := ParseTeam(data)
 	if err != nil {
 		t.Fatal(err)
 	}

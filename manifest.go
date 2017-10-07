@@ -15,13 +15,13 @@ type Service struct {
 	Deploys []*Deploy `yaml:"deploys"`
 }
 
-type Manifest struct {
+type Team struct {
 	Services []*Service `yaml:"services"`
 }
 
-// Parse decodes a YAML document into a manifest.
-func ParseManifest(in []byte) (*Manifest, error) {
-	m := &Manifest{}
+// Parse decodes a YAML document into a team.
+func ParseTeam(in []byte) (*Team, error) {
+	m := &Team{}
 	if err := yaml.Unmarshal(in, &m); err != nil {
 		return nil, err
 	}

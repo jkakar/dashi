@@ -6,8 +6,8 @@ Dashi is a redirector.
 services:
     - name: service name
       deploys:
-          - name: identifier
-            env: location
+          - name: app name
+            runtime: location
             url: dashboard url
 ```
 
