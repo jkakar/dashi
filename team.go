@@ -9,12 +9,13 @@ type Deploy struct {
 	URL     string `yaml:"url"`
 }
 
-// Service represents a service.
+// Service represents a service that is deployed in one or more runtimes.
 type Service struct {
 	Name    string    `yaml:"name"`
 	Deploys []*Deploy `yaml:"deploys"`
 }
 
+// Team represents a team that owns services.
 type Team struct {
 	Services []*Service `yaml:"services"`
 }

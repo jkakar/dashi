@@ -5,20 +5,27 @@ import (
 	"strings"
 )
 
+// Dashboard contains a link to a dashboard for a service owned by a team.
 type Dashboard struct {
 	Team string
 	Name string
 	URL  string
 }
 
+// Manifest keeps track of teams.
 type Manifest struct {
 	teams map[string]*Team
 }
 
+// NewManifest creates a new manifest that can be used to search teams for
+// dashboards.
 func NewManifest(teams map[string]*Team) *Manifest {
 	return &Manifest{teams: teams}
 }
 
+// Match returns dashboards that match the service and deploy query
+// values. Services and deploys match if the query values are either partial
+// or exact matches to their names.
 func (m *Manifest) Match(service, deploy string) []*Dashboard {
 	names := []string{}
 	for n, _ := range m.teams {
