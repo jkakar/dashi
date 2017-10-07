@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var data = []byte(`
+var teamData = []byte(`
 services:
     - name: service name
       deploys:
@@ -27,7 +27,7 @@ func TestParseTeam(t *testing.T) {
 	want := &Team{
 		Services: []*Service{service},
 	}
-	got, err := ParseTeam(data)
+	got, err := ParseTeam(teamData)
 	if err != nil {
 		t.Fatal(err)
 	}
