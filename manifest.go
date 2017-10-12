@@ -42,10 +42,10 @@ type SearchResult struct {
 	URL     string `json:"url"`
 }
 
-// Search returns dashboards that match the service and deploy query
-// values. Services and deploys match if the query values are either partial
+// Search returns dashboards that match the service and dashboard query
+// values. Services and dashboards match if the query values are either partial
 // or exact matches to their names.
-func (m *Manifest) Search(service, deploy string) []*SearchResult {
+func (m *Manifest) Search(service, dashboard string) []*SearchResult {
 	result := []*SearchResult{}
 	for _, t := range m.Teams {
 		for _, s := range t.Services {
@@ -53,7 +53,7 @@ func (m *Manifest) Search(service, deploy string) []*SearchResult {
 				continue
 			}
 			for _, d := range s.Dashboards {
-				if !strings.HasPrefix(d.Name, deploy) {
+				if !strings.HasPrefix(d.Name, dashboard) {
 					continue
 				}
 				match := &SearchResult{
