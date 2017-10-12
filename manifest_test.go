@@ -63,7 +63,7 @@ func TestUnmarshal(t *testing.T) {
 
 func TestSearchEmptyManifest(t *testing.T) {
 	m := &Manifest{}
-	got := m.Search("service", "deploy")
+	got := m.Search("service", "dashboard")
 	if len(got) != 0 {
 		t.Fatalf("got %#v, want empty slice", got)
 	}
@@ -74,7 +74,7 @@ func TestSearchWithoutServiceMatch(t *testing.T) {
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	got := m.Search("unknown", "deploy")
+	got := m.Search("unknown", "dashboard")
 	if len(got) != 0 {
 		t.Fatalf("got %#v, want empty slice", got)
 	}
