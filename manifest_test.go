@@ -6,77 +6,128 @@ import (
 	"testing"
 )
 
-func TestMatchEmptyManifest(t *testing.T) {
-	m := NewManifest(map[string]*Team{})
-	got := m.Match("service", "deploy")
+var teamData = []byte(`
+teams:
+    - name: team name
+      services:
+          - name: service name
+            dashboards:
+                - name: dashboard name
+                  env: location
+                  url: dashboard url
+`)
+
+var multiTeamData = []byte(`
+teams:
+    - name: team1
+      services:
+          - name: service name
+            dashboards:
+                - name: dashboard name
+                  env: location
+                  url: dashboard url
+    - name: team2
+      services:
+          - name: service name
+            dashboards:
+                - name: dashboard name
+                  env: location
+                  url: dashboard url
+`)
+
+func TestUnmarshal(t *testing.T) {
+	dashboard := &Dashboard{
+		Name: "dashboard name",
+		Env:  "location",
+		URL:  "dashboard url",
+	}
+	service := &Service{
+		Name:       "service name",
+		Dashboards: []*Dashboard{dashboard},
+	}
+	team := &Team{
+		Name:     "team name",
+		Services: []*Service{service},
+	}
+	want := &Manifest{
+		Teams: []*Team{team},
+	}
+	got := &Manifest{}
+	if err := Unmarshal(teamData, got); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %#v, want %#v", got, want)
+	}
+}
+
+func TestSearchEmptyManifest(t *testing.T) {
+	m := &Manifest{}
+	got := m.Search("service", "deploy")
 	if len(got) != 0 {
 		t.Fatalf("got %#v, want empty slice", got)
 	}
 }
 
-func TestMatchWithoutServiceMatch(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearchWithoutServiceMatch(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team": team}
-	m := NewManifest(manifest)
-	got := m.Match("unknown", "deploy")
+	got := m.Search("unknown", "deploy")
 	if len(got) != 0 {
 		t.Fatalf("got %#v, want empty slice", got)
 	}
 }
 
-func TestMatchWithoutDeployMatch(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearchWithoutDashboardMatch(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team": team}
-	m := NewManifest(manifest)
-	got := m.Match("service name", "unknown")
+	got := m.Search("service name", "unknown")
 	if len(got) != 0 {
 		t.Fatalf("got %#v, want empty slice", got)
 	}
 }
 
-func TestMatch(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearch(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team": team}
-	m := NewManifest(manifest)
-	got := m.Match("service name", "app name")
+	got := m.Search("service name", "dashboard name")
 	if len(got) != 1 {
 		t.Fatalf("got %#v, want 1-element slice", got)
 	}
-	want := &Dashboard{
-		Team: "team",
-		Name: "app name",
-		URL:  "dashboard url",
+	want := &SearchResult{
+		Team:    "team name",
+		Service: "service name",
+		Name:    "dashboard name",
+		Env:     "location",
+		URL:     "dashboard url",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)
 	}
 }
 
-func TestMatchMultiple(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearchMultiple(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(multiTeamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team1": team, "team2": team}
-	m := NewManifest(manifest)
-	res := m.Match("service name", "app name")
+	res := m.Search("service name", "dashboard name")
 	if len(res) != 2 {
 		t.Fatalf("got %#v, want 2-element slice", res)
 	}
 	for i, got := range res {
-		want := &Dashboard{
-			Team: fmt.Sprintf("team%d", i+1),
-			Name: "app name",
-			URL:  "dashboard url",
+		want := &SearchResult{
+			Team:    fmt.Sprintf("team%d", i+1),
+			Service: "service name",
+			Name:    "dashboard name",
+			Env:     "location",
+			URL:     "dashboard url",
 		}
 		if !reflect.DeepEqual(got, want) {
 			t.Fatalf("%d: got %#v, want %#v", i, got, want)
@@ -84,42 +135,42 @@ func TestMatchMultiple(t *testing.T) {
 	}
 }
 
-func TestMatchPartialServiceMatch(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearchPartialServiceMatch(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team": team}
-	m := NewManifest(manifest)
-	got := m.Match("serv", "app name")
+	got := m.Search("serv", "dashboard name")
 	if len(got) != 1 {
 		t.Fatalf("got %#v, want 1-element slice", got)
 	}
-	want := &Dashboard{
-		Team: "team",
-		Name: "app name",
-		URL:  "dashboard url",
+	want := &SearchResult{
+		Team:    "team name",
+		Service: "service name",
+		Name:    "dashboard name",
+		Env:     "location",
+		URL:     "dashboard url",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)
 	}
 }
 
-func TestMatchPartialDeployMatch(t *testing.T) {
-	team, err := ParseTeam(teamData)
-	if err != nil {
+func TestSearchPartialDashboardMatch(t *testing.T) {
+	m := &Manifest{}
+	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
 	}
-	manifest := map[string]*Team{"team": team}
-	m := NewManifest(manifest)
-	got := m.Match("service name", "app")
+	got := m.Search("service name", "dashboard")
 	if len(got) != 1 {
 		t.Fatalf("got %#v, want 1-element slice", got)
 	}
-	want := &Dashboard{
-		Team: "team",
-		Name: "app name",
-		URL:  "dashboard url",
+	want := &SearchResult{
+		Team:    "team name",
+		Service: "service name",
+		Name:    "dashboard name",
+		Env:     "location",
+		URL:     "dashboard url",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)

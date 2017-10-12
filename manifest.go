@@ -1,67 +1,71 @@
 package dashi
 
 import (
-	"sort"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
-// Dashboard contains a link to a dashboard for a service owned by a team.
 type Dashboard struct {
-	Team string
-	Name string
-	URL  string
+	Name string `yaml:"name"`
+	Env  string `yaml:"env"`
+	URL  string `yaml:"url"`
 }
 
-// Manifest keeps track of teams.
+type Service struct {
+	Name       string       `yaml:"name"`
+	Dashboards []*Dashboard `yaml:"dashboards"`
+}
+
+type Team struct {
+	Name     string     `yaml:"name"`
+	Services []*Service `yaml:"services"`
+}
+
 type Manifest struct {
-	teams map[string]*Team
+	Teams []*Team `yaml:"teams"`
 }
 
-// NewManifest creates a new manifest that can be used to search teams for
-// dashboards.
-func NewManifest(teams map[string]*Team) *Manifest {
-	return &Manifest{teams: teams}
+// Parse decodes a YAML document into a manifest.
+func Unmarshal(in []byte, manifest *Manifest) error {
+	if err := yaml.Unmarshal(in, &manifest); err != nil {
+		return err
+	}
+	return nil
 }
 
-// Match returns dashboards that match the service and deploy query
+type SearchResult struct {
+	Team    string `json:"team"`
+	Service string `json:"service"`
+	Name    string `json:"name"`
+	Env     string `json:"env"`
+	URL     string `json:"url"`
+}
+
+// Search returns dashboards that match the service and deploy query
 // values. Services and deploys match if the query values are either partial
 // or exact matches to their names.
-func (m *Manifest) Match(service, deploy string) []*Dashboard {
-	names := []string{}
-	for n, _ := range m.teams {
-		names = append(names, n)
-	}
-	sort.Strings(names)
-
-	res := []*Dashboard{}
-	for _, name := range names {
-		t := m.teams[name]
-		res = append(res, m.matchServices(name, service, deploy, t.Services)...)
-	}
-	return res
-}
-
-func (m *Manifest) matchServices(team, name, deploy string, services []*Service) []*Dashboard {
-	res := []*Dashboard{}
-	for _, s := range services {
-		if strings.HasPrefix(s.Name, name) {
-			res = append(res, m.matchDeploys(team, deploy, s.Deploys)...)
-		}
-	}
-	return res
-}
-
-func (m *Manifest) matchDeploys(team, name string, deploys []*Deploy) []*Dashboard {
-	res := []*Dashboard{}
-	for _, d := range deploys {
-		if strings.HasPrefix(d.Name, name) {
-			match := &Dashboard{
-				Team: team,
-				Name: d.Name,
-				URL:  d.URL,
+func (m *Manifest) Search(service, deploy string) []*SearchResult {
+	result := []*SearchResult{}
+	for _, t := range m.Teams {
+		for _, s := range t.Services {
+			if !strings.HasPrefix(s.Name, service) {
+				continue
 			}
-			res = append(res, match)
+			for _, d := range s.Dashboards {
+				if !strings.HasPrefix(d.Name, deploy) {
+					continue
+				}
+				match := &SearchResult{
+					Team:    t.Name,
+					Service: s.Name,
+					Name:    d.Name,
+					Env:     d.Env,
+					URL:     d.URL,
+				}
+				result = append(result, match)
+			}
 		}
 	}
-	return res
+	return result
 }
