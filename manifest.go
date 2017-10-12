@@ -35,11 +35,11 @@ func Unmarshal(in []byte, manifest *Manifest) error {
 }
 
 type SearchResult struct {
-	Team    string
-	Service string
-	Name    string
-	Env     string
-	URL     string
+	Team    string `json:"team"`
+	Service string `json:"service"`
+	Name    string `json:"name"`
+	Env     string `json:"env"`
+	URL     string `json:"url"`
 }
 
 // Search returns dashboards that match the service and deploy query

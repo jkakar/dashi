@@ -61,7 +61,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 }
 
-func TestMatchEmptyManifest(t *testing.T) {
+func TestSearchEmptyManifest(t *testing.T) {
 	m := &Manifest{}
 	got := m.Search("service", "deploy")
 	if len(got) != 0 {
@@ -69,7 +69,7 @@ func TestMatchEmptyManifest(t *testing.T) {
 	}
 }
 
-func TestMatchWithoutServiceMatch(t *testing.T) {
+func TestSearchWithoutServiceMatch(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
@@ -80,7 +80,7 @@ func TestMatchWithoutServiceMatch(t *testing.T) {
 	}
 }
 
-func TestMatchWithoutDashboardMatch(t *testing.T) {
+func TestSearchWithoutDashboardMatch(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
@@ -91,7 +91,7 @@ func TestMatchWithoutDashboardMatch(t *testing.T) {
 	}
 }
 
-func TestMatch(t *testing.T) {
+func TestSearch(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
@@ -112,7 +112,7 @@ func TestMatch(t *testing.T) {
 	}
 }
 
-func TestMatchMultiple(t *testing.T) {
+func TestSearchMultiple(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(multiTeamData, m); err != nil {
 		t.Fatal(err)
@@ -135,7 +135,7 @@ func TestMatchMultiple(t *testing.T) {
 	}
 }
 
-func TestMatchPartialServiceMatch(t *testing.T) {
+func TestSearchPartialServiceMatch(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)
@@ -156,7 +156,7 @@ func TestMatchPartialServiceMatch(t *testing.T) {
 	}
 }
 
-func TestMatchPartialDashboardMatch(t *testing.T) {
+func TestSearchPartialDashboardMatch(t *testing.T) {
 	m := &Manifest{}
 	if err := Unmarshal(teamData, m); err != nil {
 		t.Fatal(err)

@@ -38,3 +38,19 @@ matches it, the list of relevant dashboards will be returned. If the
 for the matching dashboards. If the `Content-Type` is `text/html` the service
 will respond with an HTTP 404 if no match is found, perform a redirect if
 exactly one match is found, or a web page listing all matching dashboards.
+
+## Examples
+
+Start the API:
+
+```
+go run cmd/dashi-api/main.go
+```
+
+And make some requests to see what the results look like:
+
+```
+curl --silent -H 'Content-Type: application/json' localhost:8080 | jq .
+curl --silent -H 'Content-Type: application/json' localhost:8080/domain | jq .
+curl --silent -H 'Content-Type: application/json' localhost:8080/domain%20ie | jq .
+```
