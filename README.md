@@ -3,19 +3,21 @@ Dashi is a redirector.
 ## Format
 
 ```
-services:
-    - name: service name
-      deploys:
-          - name: app name
-            runtime: location
-            url: dashboard url
+teams:
+    - name: team name
+      services:
+          - name: service name
+            dashboards:
+                - name: dashboard name
+                  env: location
+                  url: dashboard url
 ```
 
 ## User experience
 
-You write YAML files containing the configuration of your dashboards with a
-file per team containing that teams service definitions. These are
-automatically compiled into the application and served when requests are made.
+You write YAML files containing the configuration of your dashboards, with
+services grouped together with the teams that own them. These are loaded by
+the application and used to serve results when requests are made.
 
 A search endpoint matches queries to dashboards and returns a redirect on
 success or an HTTP 404 if a match isn't found:
@@ -26,10 +28,13 @@ GET /:query
 
 The query must match the form `<service> <deploy>`. Dashi can be setup as a
 search bookmark in Chrome so that you can type `dashi myservice production` in
-the omnibox and get redirected to the relevant dashboard.
+the omnibox and get redirected to the relevant dashboard. Partial matches
+against both the service and deploy are accepted, so `dashi mys prod` would be
+equivalent.
 
 If the query is empty or only contains a service, and more than one dashboard
 matches it, the list of relevant dashboards will be returned. If the
-`Content-Type` is `text/plain` the service will return a textual listing of
-the matching dashboards. If the `Content-Type` is `text/html` the service will
-return a web page listing the matching dashboards.
+`Content-Type` is `application/json` the service will return a JSON object
+for the matching dashboards. If the `Content-Type` is `text/html` the service
+will respond with an HTTP 404 if no match is found, perform a redirect if
+exactly one match is found, or a web page listing all matching dashboards.
