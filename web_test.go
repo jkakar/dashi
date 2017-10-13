@@ -139,6 +139,32 @@ func TestSearchHTML(t *testing.T) {
 	}
 }
 
+func TestSearchHTMLWithoutMatch(t *testing.T) {
+	manifest := &Manifest{}
+	if err := Unmarshal(teamData, manifest); err != nil {
+		t.Fatal(err)
+	}
+	handler := NewSearchHandler(manifest)
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	url := srv.URL + "/unknown"
+	req, err := http.NewRequest(http.MethodGet, url, &bytes.Buffer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "text/html")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusNotFound {
+		t.Fatalf("got %d, want %d", resp.StatusCode, http.StatusNotFound)
+	}
+}
+
 func TestParseQuery(t *testing.T) {
 	cases := []struct {
 		query     string
