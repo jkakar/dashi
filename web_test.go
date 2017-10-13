@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestSearchHandler(t *testing.T) {
+func TestSearchJSON(t *testing.T) {
 	manifest := &Manifest{}
 	if err := Unmarshal(teamData, manifest); err != nil {
 		t.Fatal(err)
@@ -34,7 +34,7 @@ func TestSearchHandler(t *testing.T) {
 						Service: "service name",
 						Name:    "dashboard name",
 						Env:     "location",
-						URL:     "dashboard url",
+						URL:     "https://example.com/dashboard",
 					},
 				},
 			},
@@ -49,7 +49,7 @@ func TestSearchHandler(t *testing.T) {
 						Service: "service name",
 						Name:    "dashboard name",
 						Env:     "location",
-						URL:     "dashboard url",
+						URL:     "https://example.com/dashboard",
 					},
 				},
 			},
@@ -64,7 +64,7 @@ func TestSearchHandler(t *testing.T) {
 						Service: "service name",
 						Name:    "dashboard name",
 						Env:     "location",
-						URL:     "dashboard url",
+						URL:     "https://example.com/dashboard",
 					},
 				},
 			},
@@ -102,6 +102,66 @@ func TestSearchHandler(t *testing.T) {
 		if !reflect.DeepEqual(got, tt.want) {
 			t.Fatal("%s: got %#v, want %#v", tt.name, got, tt.want)
 		}
+	}
+}
+
+func TestSearchHTML(t *testing.T) {
+	manifest := &Manifest{}
+	if err := Unmarshal(teamData, manifest); err != nil {
+		t.Fatal(err)
+	}
+	handler := NewSearchHandler(manifest)
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	req, err := http.NewRequest(http.MethodGet, srv.URL, &bytes.Buffer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "text/html")
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusFound {
+		t.Fatalf("got %d, want %d", resp.StatusCode, http.StatusFound)
+	}
+	got := resp.Header.Get("Location")
+	want := "https://example.com/dashboard"
+	if got != want {
+		t.Fatalf("got %s, want %s", got, want)
+	}
+}
+
+func TestSearchHTMLWithoutMatch(t *testing.T) {
+	manifest := &Manifest{}
+	if err := Unmarshal(teamData, manifest); err != nil {
+		t.Fatal(err)
+	}
+	handler := NewSearchHandler(manifest)
+	srv := httptest.NewServer(handler)
+	defer srv.Close()
+
+	url := srv.URL + "/unknown"
+	req, err := http.NewRequest(http.MethodGet, url, &bytes.Buffer{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "text/html")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusNotFound {
+		t.Fatalf("got %d, want %d", resp.StatusCode, http.StatusNotFound)
 	}
 }
 

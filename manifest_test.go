@@ -14,7 +14,7 @@ teams:
             dashboards:
                 - name: dashboard name
                   env: location
-                  url: dashboard url
+                  url: https://example.com/dashboard
 `)
 
 var multiTeamData = []byte(`
@@ -25,21 +25,21 @@ teams:
             dashboards:
                 - name: dashboard name
                   env: location
-                  url: dashboard url
+                  url: https://example.com/dashboard/1
     - name: team2
       services:
           - name: service name
             dashboards:
                 - name: dashboard name
                   env: location
-                  url: dashboard url
+                  url: https://example.com/dashboard/2
 `)
 
 func TestUnmarshal(t *testing.T) {
 	dashboard := &Dashboard{
 		Name: "dashboard name",
 		Env:  "location",
-		URL:  "dashboard url",
+		URL:  "https://example.com/dashboard",
 	}
 	service := &Service{
 		Name:       "service name",
@@ -105,7 +105,7 @@ func TestSearch(t *testing.T) {
 		Service: "service name",
 		Name:    "dashboard name",
 		Env:     "location",
-		URL:     "dashboard url",
+		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)
@@ -127,7 +127,7 @@ func TestSearchMultiple(t *testing.T) {
 			Service: "service name",
 			Name:    "dashboard name",
 			Env:     "location",
-			URL:     "dashboard url",
+			URL:     fmt.Sprintf("https://example.com/dashboard/%d", i+1),
 		}
 		if !reflect.DeepEqual(got, want) {
 			t.Fatalf("%d: got %#v, want %#v", i, got, want)
@@ -149,7 +149,7 @@ func TestSearchPartialServiceMatch(t *testing.T) {
 		Service: "service name",
 		Name:    "dashboard name",
 		Env:     "location",
-		URL:     "dashboard url",
+		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)
@@ -170,7 +170,7 @@ func TestSearchPartialDashboardMatch(t *testing.T) {
 		Service: "service name",
 		Name:    "dashboard name",
 		Env:     "location",
-		URL:     "dashboard url",
+		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
 		t.Fatalf("got %#v, want %#v", got[0], want)

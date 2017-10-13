@@ -22,13 +22,15 @@ func NewSearchHandler(manifest *Manifest) *SearchHandler {
 func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Header.Get("Content-Type") {
 	case "application/json":
-		h.search(w, r)
+		h.searchJSON(w, r)
+	case "text/html":
+		h.searchHTML(w, r)
 	default:
 		w.WriteHeader(http.StatusUnsupportedMediaType)
 	}
 }
 
-func (h *SearchHandler) search(w http.ResponseWriter, r *http.Request) {
+func (h *SearchHandler) searchJSON(w http.ResponseWriter, r *http.Request) {
 	service, dashboard := parseQuery(r.URL.Path)
 	dashboards := h.manifest.Search(service, dashboard)
 	res := &SearchResults{Dashboards: dashboards}
@@ -40,6 +42,19 @@ func (h *SearchHandler) search(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "%s", buf)
+}
+
+func (h *SearchHandler) searchHTML(w http.ResponseWriter, r *http.Request) {
+	service, dashboard := parseQuery(r.URL.Path)
+	dashboards := h.manifest.Search(service, dashboard)
+	switch len(dashboards) {
+	case 0:
+		w.WriteHeader(http.StatusNotFound)
+	case 1:
+		http.Redirect(w, r, dashboards[0].URL, http.StatusFound)
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 func parseQuery(query string) (service string, dashboard string) {
