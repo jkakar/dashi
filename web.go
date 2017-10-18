@@ -22,11 +22,11 @@ func NewSearchHandler(manifest *Manifest) *SearchHandler {
 
 func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%#v", r.Header)
-	ctype := r.Header.Get("Content-Type")
+	ctype := r.Header.Get("Accept")
 	switch ctype {
 	case "application/json":
 		h.searchJSON(w, r)
-	case "text/html":
+	case strings.Contains(ctype, "text/html"):
 		h.searchHTML(w, r)
 	default:
 		log.Printf("content-type: %s", ctype)
