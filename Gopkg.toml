@@ -22,7 +22,7 @@
 
 [metadata.heroku]
   root-package = "github.com/jkakar/dashi"
-  go-version = "1.9"
+  go-version = "go1.9"
   install = [ "./..." ]
 
 [[constraint]]
