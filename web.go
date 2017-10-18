@@ -21,6 +21,7 @@ func NewSearchHandler(manifest *Manifest) *SearchHandler {
 }
 
 func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Printf("%#v", r.Header)
 	ctype := r.Header.Get("Content-Type")
 	switch ctype {
 	case "application/json":
