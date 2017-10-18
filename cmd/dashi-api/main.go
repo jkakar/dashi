@@ -22,7 +22,7 @@ func main() {
 	}
 	manifest := &dashi.Manifest{}
 	for _, filename := range os.Args[1:] {
-		data, err = ioutil.ReadFile(filename)
+		data, err := ioutil.ReadFile(filename)
 		if err != nil {
 			log.Fatalf("error reading file %s: %q", filename, err)
 		}
