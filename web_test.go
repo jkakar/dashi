@@ -81,7 +81,7 @@ func TestSearchJSON(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Accept", "application/json")
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
@@ -118,7 +118,7 @@ func TestSearchHTML(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req.Header.Set("Content-Type", "text/html")
+	req.Header.Set("Accept", "text/html")
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
@@ -153,7 +153,7 @@ func TestSearchHTMLWithoutMatch(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req.Header.Set("Content-Type", "text/html")
+	req.Header.Set("Accept", "text/html")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {

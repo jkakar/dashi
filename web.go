@@ -3,7 +3,6 @@ package dashi
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -21,7 +20,6 @@ func NewSearchHandler(manifest *Manifest) *SearchHandler {
 }
 
 func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Printf("%#v", r.Header)
 	ctype := r.Header.Get("Accept")
 	if strings.Contains(ctype, "application/json") {
 		h.searchJSON(w, r)
@@ -31,7 +29,6 @@ func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.searchHTML(w, r)
 		return
 	}
-	log.Printf("content-type: %s", ctype)
 	w.WriteHeader(http.StatusUnsupportedMediaType)
 }
 
