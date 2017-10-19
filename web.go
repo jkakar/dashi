@@ -20,10 +20,11 @@ func NewSearchHandler(manifest *Manifest) *SearchHandler {
 }
 
 func (h *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Header.Get("Content-Type") {
-	case "application/json":
+	v := r.Header.Get("Accept")
+	switch {
+	case strings.Contains(v, "application/json"):
 		h.searchJSON(w, r)
-	case "text/html":
+	case strings.Contains(v, "text/html"):
 		h.searchHTML(w, r)
 	default:
 		w.WriteHeader(http.StatusUnsupportedMediaType)

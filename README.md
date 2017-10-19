@@ -33,11 +33,11 @@ against both the service and deploy are accepted, so `dashi mys prod` would be
 equivalent.
 
 If the query is empty or only contains a service, and more than one dashboard
-matches it, the list of relevant dashboards will be returned. If the
-`Content-Type` is `application/json` the service will return a JSON object
-for the matching dashboards. If the `Content-Type` is `text/html` the service
-will respond with an HTTP 404 if no match is found, perform a redirect if
-exactly one match is found, or a web page listing all matching dashboards.
+matches it, the list of relevant dashboards will be returned. If the `Accept`
+header contains `application/json` the service will return a JSON object for
+the matching dashboards. If the `Accept` header contains `text/html` the
+service will respond with an HTTP 404 if no match is found, perform a redirect
+if exactly one match is found, or a web page listing all matching dashboards.
 
 ## Examples
 
