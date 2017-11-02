@@ -113,7 +113,6 @@ func processResults(results []*SearchResult) *Manifest {
 
 		dashboard := &Dashboard{
 			Name: r.Name,
-			Env:  r.Env,
 			URL:  r.URL,
 		}
 		service.Dashboards = append(service.Dashboards, dashboard)

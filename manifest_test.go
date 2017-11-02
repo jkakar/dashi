@@ -13,7 +13,6 @@ teams:
           - name: service name
             dashboards:
                 - name: dashboard name
-                  env: location
                   url: https://example.com/dashboard
 `)
 
@@ -24,21 +23,18 @@ teams:
           - name: service name
             dashboards:
                 - name: dashboard name
-                  env: location
                   url: https://example.com/dashboard/1
     - name: team2
       services:
           - name: service name
             dashboards:
                 - name: dashboard name
-                  env: location
                   url: https://example.com/dashboard/2
 `)
 
 func TestUnmarshal(t *testing.T) {
 	dashboard := &Dashboard{
 		Name: "dashboard name",
-		Env:  "location",
 		URL:  "https://example.com/dashboard",
 	}
 	service := &Service{
@@ -117,7 +113,6 @@ func TestSearch(t *testing.T) {
 		Team:    "team name",
 		Service: "service name",
 		Name:    "dashboard name",
-		Env:     "location",
 		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
@@ -139,7 +134,6 @@ func TestSearchMultiple(t *testing.T) {
 			Team:    fmt.Sprintf("team%d", i+1),
 			Service: "service name",
 			Name:    "dashboard name",
-			Env:     "location",
 			URL:     fmt.Sprintf("https://example.com/dashboard/%d", i+1),
 		}
 		if !reflect.DeepEqual(got, want) {
@@ -161,7 +155,6 @@ func TestSearchPartialServiceMatch(t *testing.T) {
 		Team:    "team name",
 		Service: "service name",
 		Name:    "dashboard name",
-		Env:     "location",
 		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
@@ -182,7 +175,6 @@ func TestSearchPartialDashboardMatch(t *testing.T) {
 		Team:    "team name",
 		Service: "service name",
 		Name:    "dashboard name",
-		Env:     "location",
 		URL:     "https://example.com/dashboard",
 	}
 	if !reflect.DeepEqual(got[0], want) {
