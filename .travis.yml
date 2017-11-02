@@ -3,4 +3,4 @@ go:
   - 1.9.x
 go_import_path: github.com/jkakar/dashi
 before_install:
-  - go run cmd/dashi-checker/main.go *.yaml
+  - go run cmd/dashi-checker/main.go $TRAVIS_BUILD_DIR/*.yaml
