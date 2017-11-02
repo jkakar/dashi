@@ -1,0 +1,53 @@
+teams:
+  - name: Runtime
+    services:
+      - name: psmgr
+        dashboards:
+          - name: us
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.heroku.psmgr%20OR%20com.heroku.psmgr.%2A%20OR%20com.heroku.psmgr-db.database%20OR%20com.heroku.maestro-db.database%20OR%20com.heroku.us-east-1%2A.elb002529
+          - name: eu
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.heroku-eu-west-1-a.psmgr%20OR%20com.heroku-eu-west-1-a.psmgr.%2A%20OR%20com.heroku-eu-west-1-a.psmgr-db.database%20OR%20com.heroku-eu-west-1-a.maestro-db.database%20OR%20com.heroku.eu-west-1%2A.elb000002
+          - name: staging
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.herokudev.staging.psmgr%20OR%20com.herokudev.staging.psmgr.%2A%20OR%20com.herokudev.staging.psmgr-db.database%20OR%20com.herokudev.staging.maestro-db.database
+      - name: canaries
+        dashboards:
+          - name: us
+            url: https://metrics.librato.com/s/spaces/43661
+          - name: eu
+            url: https://metrics.librato.com/s/spaces/43661
+          - name: staging
+            url: https://metrics.librato.com/s/spaces/59967
+      - name: hermes
+        dashboards:
+          - name: us
+            url: https://metrics.librato.com/s/spaces/43663/?source=heroku.com
+          - name: eu
+            url: https://metrics.librato.com/s/spaces/43663/?source=eu-west-1-a
+      - name: domain-funnel
+        dashboards:
+            - name: st-legacy
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-st-shared
+            - name: ie-legacy
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-ie-shared
+            - name: va-legacy
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-va-shared
+      - name: release-manager
+        dashboards:
+            - name: st01
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-st01
+            - name: ie01
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-ie01
+            - name: ie02
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-ie02
+            - name: va01
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va01
+            - name: va02
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va02
+            - name: va03
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va03
+            - name: va04
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va04
+            - name: va05
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va05
+            - name: va06
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va06

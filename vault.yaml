@@ -1,0 +1,15 @@
+teams:
+  - name: Vault
+    services:
+      - name: vault-usage
+        dashboards:
+          - name: production
+            url: https://metrics.librato.com/dashboards/8306?source=production
+          - name: staging
+            url: https://metrics.librato.com/dashboards/8306?source=staging
+      - name: vault-cashier
+        dashboards:
+          - name: production
+            url: https://metrics.librato.com/dashboards/8635?source=production
+          - name: staging
+            url: https://metrics.librato.com/dashboards/8635?source=staging
