@@ -61,6 +61,19 @@ func TestUnmarshal(t *testing.T) {
 	}
 }
 
+func TestUnmarshalAppends(t *testing.T) {
+	manifest := &Manifest{}
+	if err := Unmarshal(teamData, manifest); err != nil {
+		t.Fatal(err)
+	}
+	if err := Unmarshal(multiTeamData, manifest); err != nil {
+		t.Fatal(err)
+	}
+	if len(manifest.Teams) != 3 {
+		t.Fatalf("got %d, want 3", len(manifest.Teams))
+	}
+}
+
 func TestSearchEmptyManifest(t *testing.T) {
 	m := &Manifest{}
 	got := m.Search("service", "dashboard")

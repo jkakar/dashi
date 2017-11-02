@@ -160,8 +160,8 @@ func TestSearchHTMLWithoutMatch(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusNotFound {
-		t.Fatalf("got %d, want %d", resp.StatusCode, http.StatusNotFound)
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("got %d, want %d", resp.StatusCode, http.StatusOK)
 	}
 }
 

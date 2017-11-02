@@ -3,6 +3,7 @@ package dashi
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strings"
 )
@@ -48,13 +49,25 @@ func (h *SearchHandler) searchJSON(w http.ResponseWriter, r *http.Request) {
 func (h *SearchHandler) searchHTML(w http.ResponseWriter, r *http.Request) {
 	service, dashboard := parseQuery(r.URL.Path)
 	dashboards := h.manifest.Search(service, dashboard)
-	switch len(dashboards) {
-	case 0:
-		w.WriteHeader(http.StatusNotFound)
-	case 1:
+	if len(dashboards) == 1 {
 		http.Redirect(w, r, dashboards[0].URL, http.StatusFound)
-	default:
-		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	results := h.manifest
+	if len(dashboards) >= 1 {
+		results = processResults(dashboards)
+	}
+
+	tmpl, err := template.New("index.html").ParseFiles("templates/index.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, results); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -68,4 +81,42 @@ func parseQuery(query string) (service string, dashboard string) {
 		dashboard = parts[1]
 	}
 	return
+}
+
+func processResults(results []*SearchResult) *Manifest {
+	manifest := &Manifest{
+		Teams: []*Team{},
+	}
+	teams := map[string]*Team{}
+	services := map[string]*Service{}
+
+	for _, r := range results {
+		team, ok := teams[r.Team]
+		if !ok {
+			team = &Team{
+				Name:     r.Team,
+				Services: []*Service{},
+			}
+			teams[r.Team] = team
+			manifest.Teams = append(manifest.Teams, team)
+		}
+
+		service, ok := services[r.Service]
+		if !ok {
+			service = &Service{
+				Name:       r.Service,
+				Dashboards: []*Dashboard{},
+			}
+			services[r.Service] = service
+			team.Services = append(team.Services, service)
+		}
+
+		dashboard := &Dashboard{
+			Name: r.Name,
+			Env:  r.Env,
+			URL:  r.URL,
+		}
+		service.Dashboards = append(service.Dashboards, dashboard)
+	}
+	return manifest
 }
