@@ -4,16 +4,12 @@ teams:
       - name: vault-usage
         dashboards:
           - name: production
-            env: Production
             url: https://metrics.librato.com/dashboards/8306?source=production
           - name: staging
-            env: Staging
             url: https://metrics.librato.com/dashboards/8306?source=staging
       - name: vault-cashier
         dashboards:
           - name: production
-            env: Production
             url: https://metrics.librato.com/dashboards/8635?source=production
           - name: staging
-            env: Staging
             url: https://metrics.librato.com/dashboards/8635?source=staging
