@@ -1,0 +1,73 @@
+teams:
+  - name: Runtime
+    services:
+      - name: psmgr
+        dashboards:
+          - name: us
+            env: US
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.heroku.psmgr%20OR%20com.heroku.psmgr.%2A%20OR%20com.heroku.psmgr-db.database%20OR%20com.heroku.maestro-db.database%20OR%20com.heroku.us-east-1%2A.elb002529
+          - name: eu
+            env: EU
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.heroku-eu-west-1-a.psmgr%20OR%20com.heroku-eu-west-1-a.psmgr.%2A%20OR%20com.heroku-eu-west-1-a.psmgr-db.database%20OR%20com.heroku-eu-west-1-a.maestro-db.database%20OR%20com.heroku.eu-west-1%2A.elb000002
+          - name: staging
+            env: Staging
+            url: https://metrics.librato.com/s/spaces/53099/?source=com.herokudev.staging.psmgr%20OR%20com.herokudev.staging.psmgr.%2A%20OR%20com.herokudev.staging.psmgr-db.database%20OR%20com.herokudev.staging.maestro-db.database
+      - name: canaries
+        dashboards:
+          - name: us
+            env: US
+            url: https://metrics.librato.com/s/spaces/43661
+          - name: eu
+            env: EU
+            url: https://metrics.librato.com/s/spaces/43661
+          - name: staging
+            env: Staging
+            url: https://metrics.librato.com/s/spaces/59967
+      - name: hermes
+        dashboards:
+          - name: us
+            env: US
+            url: https://metrics.librato.com/s/spaces/43663/?source=heroku.com
+          - name: eu
+            env: US
+            url: https://metrics.librato.com/s/spaces/43663/?source=eu-west-1-a
+      - name: domain-funnel
+        dashboards:
+            - name: st-legacy
+              env: common-runtime-st
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-st-shared
+            - name: ie-legacy
+              env: common-runtime-ie
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-ie-shared
+            - name: va-legacy
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/351543?source=common-runtime-va-shared
+      - name: release-manager
+        dashboards:
+            - name: st01
+              env: common-runtime-st
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-st01
+            - name: ie01
+              env: common-runtime-ie
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-ie01
+            - name: ie02
+              env: common-runtime-ie
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-ie02
+            - name: va01
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va01
+            - name: va02
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va02
+            - name: va03
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va03
+            - name: va04
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va04
+            - name: va05
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va05
+            - name: va06
+              env: common-runtime-va
+              url: https://metrics.librato.com/s/spaces/429997?source=common-runtime-va06
