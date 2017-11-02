@@ -22,6 +22,7 @@ func main() {
 	}
 	manifest := &dashi.Manifest{}
 	for _, filename := range os.Args[1:] {
+		log.Printf("loading manifest data from %s", filename)
 		data, err := ioutil.ReadFile(filename)
 		if err != nil {
 			log.Fatalf("error reading file %s: %q", filename, err)
@@ -30,10 +31,14 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-	handler := dashi.NewSearchHandler(manifest)
+
+	mux := http.NewServeMux()
+	fs := http.FileServer(http.Dir("static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/", dashi.NewSearchHandler(manifest))
 	s := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Port),
-		Handler: handler,
+		Handler: mux,
 	}
 	log.Printf("listening on port %d", cfg.Port)
 	log.Fatalf("listen and serve failed: %q", s.ListenAndServe())

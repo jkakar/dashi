@@ -28,9 +28,11 @@ type Manifest struct {
 
 // Parse decodes a YAML document into a manifest.
 func Unmarshal(in []byte, manifest *Manifest) error {
-	if err := yaml.Unmarshal(in, &manifest); err != nil {
+	r := &Manifest{}
+	if err := yaml.Unmarshal(in, r); err != nil {
 		return err
 	}
+	manifest.Teams = append(manifest.Teams, r.Teams...)
 	return nil
 }
 
