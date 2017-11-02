@@ -8,7 +8,6 @@ import (
 
 type Dashboard struct {
 	Name string `yaml:"name"`
-	Env  string `yaml:"env"`
 	URL  string `yaml:"url"`
 }
 
@@ -40,7 +39,6 @@ type SearchResult struct {
 	Team    string `json:"team"`
 	Service string `json:"service"`
 	Name    string `json:"name"`
-	Env     string `json:"env"`
 	URL     string `json:"url"`
 }
 
@@ -62,7 +60,6 @@ func (m *Manifest) Search(service, dashboard string) []*SearchResult {
 					Team:    t.Name,
 					Service: s.Name,
 					Name:    d.Name,
-					Env:     d.Env,
 					URL:     d.URL,
 				}
 				result = append(result, match)
