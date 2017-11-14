@@ -65,7 +65,7 @@ go run cmd/dashi-api/main.go
 And make some requests to see what the results look like:
 
 ```
-curl --silent -H 'Content-Type: application/json' localhost:8080 | jq .
-curl --silent -H 'Content-Type: application/json' localhost:8080/domain | jq .
-curl --silent -H 'Content-Type: application/json' localhost:8080/domain%20ie | jq .
+curl --silent -H 'Accept: application/json' localhost:8080 | jq .
+curl --silent -H 'Accept: application/json' localhost:8080/domain | jq .
+curl --silent -H 'Accept: application/json' localhost:8080/domain%20ie | jq .
 ```
